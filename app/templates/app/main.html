@@ -1,0 +1,146 @@
+{% load static %} <!-- Загружаем статические файлы -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'app/main.css' %}"> <!-- Подключаем статические файлы(css) -->
+</head>
+<body>
+    <!-- Шапка -->
+    <nav class="navbar navbar-expand navbar-dark bg-dark mb-5" aria-label="Second navbar example" > <!-- mb-5 отступ сверху(в классе) -->
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'app_home'  %}">App</a> <!-- url 'app_home' это название адреса который я давал в файле urls.py -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+        
+          </button>
+    <!--  -->
+          <div class="collapse navbar-collapse" id="navbarsExample02">
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'app_home'  %}">Главная</a><!-- - на главную страничку -->
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'contacts'  %}">Про нас</a> <!-- На страницу с контактами  -->
+              </li>
+            </ul>
+          </div>
+          <div class="navbar-nav"> <!-- Данный класс поможет расположить это справа -->
+            <!-- Для смены кнопок создаем условия (профиль и выход добавляются при входе) -->
+            {% if user.is_authenticated %}
+              <a href="{% url 'news-add' %}" class="btn btn-outline-secondary  mr-2">Добавить статью</a>
+              <a href="{% url 'profile' %}" class="btn btn-outline-secondary  mr-2">Профиль</a>
+              <a href="{% url 'exit' %}" class="btn btn-outline-secondary  mr-2">Выход</a>
+            {% else %}
+              <a href="{% url 'reg' %}" class="btn btn-outline-secondary  mr-2">Регистрация</a> <!-- кнопка, кнопка с обводкой темная кнопка, и отступ -->
+              <a href="{% url 'user' %}" class="btn btn-outline-secondary  mr-2">Войти</a>
+            {% endif %}
+          </div>
+        </div>
+      </nav>
+      <!-- Конец шапки -->
+<!--  -->
+    <main class="container"> <!-- Контейнер для всей страницы, добавляет отступы по бокам и центрирует содержимое -->
+        <div class="row"> <!-- Создает строку включающую две колонки горизонтально -->
+            <div class="col-md-8"> <!-- создает колонку которая занимает 8 из 12 частей  -->
+                {% if messages %}
+                  {% for mess in messages %}
+                  <div class="alert alert-success"> <!--Для стилизованного сообщения-->
+                    {{ mess }}
+                  </div>
+                  {% endfor %}
+                {% endif %}
+
+                {% block main_section %}
+                {% endblock main_section %}
+            </div>
+
+
+            <aside class="col-md-4"> <!-- Создает боковую колонку которая занимает 4 из 12 частей -->
+                <div class="p-3"> <!-- (Создает внутренний контейнер)добавляет отступы внутри элемента по всем четырем сторонам  -->
+                {% block aside_news_section %}
+                {% endblock aside_news_section %}
+                  <div class="p-3 mb-3"> <!-- Внутренний контейнер с внутренними отступами и нижним отступом  -->
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbvkFUWhINNIJau5L4raqlAYL_TacLvTXGkg&s" class="img-thumbnail mb-2"> <!-- Ссылка на внешнюю страницу с URL  с классом который диктует отступ. а img-thumbnail делает изображение в рамке и миниатюрой -->
+                    <button class="btn btn-warning">Начать изучение</button> <!--класс кнопки добавляет цвет -->
+                  </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+     <!--Это мы взяли из getbootstrap.com (а именно подвал)  -->
+    <footer class="text-body-secondary py-5">
+      <div class="container">
+        <p class="float-end mb-1">
+          <a href="#">Наверх</a>
+        </p>
+        <p class="mb-1">Album example is © Bootstrap, but please download and customize it for yourself!</p>
+        <p class="mb-0">Впервые на сайте? <a href="/">Посетите главную</a> или прочитать <a href="{% url 'contacts' %}">про нас</a>.</p>
+      </div>
+    </footer>    
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Правая и левая сторона контента
+<main class="container">  main - Основное содержимое, класс container - создает контейнер с фиксированной шириной которая адаптируется под размер экрана 
+    <div class="row">  создает горизонтальную строку для размещения колонок. Это основа сетки Bootstrap, которая позволяет вам строить адаптивный дизайн.
+         Левая 
+        <div class="col-md-8"> означает, что колонка будет занимать 8 из 12 возможных частей ширины родительского элемента row на устройствах среднего размера (md) и больше. 
+             Содержимое основного раздела 
+            
+            
+        </div>
+         Правая 
+        <aside class="col-md-4">    указывает, что эта колонка будет занимать оставшиеся 4 из 12 частей ширины родительского элемента row 
+            <div class="bg-info p-3 mb-3 rounded">  создает блок с фоном (bg-info), отступами (p-3), нижним отступом (mb-3) и скругленными углами (rounded).
+                <h3><b>Интересные статьи</b></h3>
+                <p>Здесь может быть ваш контент.</p>
+            </div>
+            <div class="p-3 mb-3" с отступами и нижним отступом, внутри которого находится изображение с классом img-thumbnail, который добавляет рамку и отступы к изображению. 
+                <img src="https://indasil.club/uploads/posts/2022-11/1669301203_1-indasil-club-p-gats-eskiz-vkontakte-1.jpg" class="img-thumbnail">  
+            </div>
+        </aside>
+    </div>
+</main> -->

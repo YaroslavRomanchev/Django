@@ -1,0 +1,40 @@
+<!-- object - здесь по умолчанию -->
+{% extends 'app/main.html' %}
+{% block main_section %}
+    <!-- Цикл здесь нам не нужен т.к нам здесь нужен лишь один объект-->
+
+    <div class="alert alert-light">
+        <a href="{% url 'app_home' %}">Вернуться назад</a>
+            <h1>{{ object.title }}</h1>
+            <p>{{ object.text|safe }}</p>
+        <div class="row">
+          <div>
+            {% if object.avtor.profile.img %}
+            <img src="{{ object.avtor.profile.img.url }}" alt="{{ object.avtor }}" class="user_image">
+            {% else %}
+            <img src="/pictures/default.jpg" alt="{{ object.avtor }}" class="user_image">
+            {% endif %}
+        </div>
+            <div class="mt-2">
+                <span class="text-muted"> {{ object.date|date:'d E Y в H:i:s' }}</span>  
+                <p><b>Автор:</b>  <a href="{% url 'user-news' object.avtor %}">{{ object.avtor }}</a> </p> 
+            </div>
+       </div> 
+       {% if object.avtor == user %}
+       <hr>
+       <a href="{% url 'news-update' object.id %}" class="btn btn-info">Обновить пост</a>
+       <a href="{% url 'news-delete' object.id %}" class="btn btn-danger">Удалить пост</a>
+       {% endif %}
+    </div>
+    
+{% endblock main_section %}
+   
+    {% block aside_news_section %}
+    <h3><b>10 Фильмов и сериалов для программистов</b></h3>
+    <img src="https://pixel-shot.com/get_image/i-5748726-0.JPG" class="img-thumbnail mb-1"> 
+        <p>Когда становишься на путь программирования хочется какие либо фильмы на эту тематику.
+    Представляем вам подборку из 10 фильмов для программистов
+        </p>
+            <a href="https://habr.com/ru/companies/ruvds/articles/523374/" target="_blank"> 
+    <button class="btn btn-warning">Посмотреть</button> 
+    {% endblock aside_news_section %}

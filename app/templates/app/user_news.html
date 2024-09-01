@@ -1,0 +1,78 @@
+{% extends 'app/main.html' %}
+
+{% block main_section %}
+<!-- Имя берем из url адреса -->
+<h2>Все статьи от автора - {{ view.kwargs.username }}</h2> 
+<h4>Количество: {{ page_obj.paginator.count }}</h4>
+    {% for post in news %}
+    <div class="alert alert-light">
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.text|striptags|truncatechars:200 }}</p> 
+        <div class="row">
+          <div>
+            {% if post.avtor.profile.img %}
+            <img src="{{ post.avtor.profile.img.url }}" alt="{{ post.avtor }}" class="user_image">
+            {% else %}
+            <img src="/pictures/default.jpg" alt="{{ post.avtor }}" class="user_image">
+            {% endif %}
+        </div>
+            <div class="mt-2">
+                <span class="text-muted"> {{ post.date|date:'d E Y в H:i:s' }}</span>  <!-- Применяем фильтр, фильтры date брал от сюда - https://docs.djangoproject.com/en/5.0/ref/templates/builtins/   и так же добавляем дату специальными значениями--> 
+                <p><b>Автор:</b>  <a href="{% url 'user-news' post.avtor %}">{{ post.avtor }}</a> </p> <!-- Если автор есть в базе данных то и ставим его -->
+            </div>
+       </div>
+       <!--news-detail - название ссылки в urls.py, post.id - у всех постов есть свой id, по id мы и показываем нашу статью  -->
+       <a href="{% url 'news-detail' post.id %}" class="btn btn-outline-warning">Читать далее</a> 
+    </div>
+    {% endfor %}
+
+<!-- -------------------------------------------Проверки на странички, вывод следущих и предыдущих----------------------------------------------- -->
+
+    <!-- Все эти переменные были взять из класса который наследуется, а именно из ListView -->
+     <!-- Если у нас сайт имет постраничный характер(с ссылками ?page=1) -->
+      <!-- Если страница имеет перед собой еще страницу то отображаем данные ссылки -->
+    {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-outline-warning">Начало</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-warning">Предыдущая</a>
+    {% endif %}
+
+<!-- Вот так должно выглядеть -->
+<!-- Начало Предыдущая 2 3 4 5 6 Следуюшая Последняя -->
+ <!-- Цикл по всем номерам страниц -->
+  <!-- Если число по циклу совпадает с числом нашей странички -->
+   <!-- То выводим кнопку с нашим номером страницы -->
+    <!-- в любом другом случае проверяем наличие страничек сзади и спереди -->
+     <!-- Если такое есть то выводим ссылки на эти странички в виде номера -->
+{% for num in page_obj.paginator.page_range %}
+    {% if num == page_obj.number %}
+    <button class="btn btn-warning">{{ num }}</button>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}" class="btn btn-outline-warning">{{ num }}</a>
+    {% endif %}
+{% endfor %}
+
+            <!-- Если есть следующая страничка -->
+             <!-- То выводим ссылки на следющую страничку и послдеднюю -->
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-warning">Следуюшая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-warning">Последняя</a>
+            {% endif %}
+        {% endif %}
+
+
+
+
+{% endblock main_section %}
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
+    {% block aside_news_section %}
+    <h3><b>10 Фильмов и сериалов для программистов</b></h3>
+    <img src="https://pixel-shot.com/get_image/i-5748726-0.JPG" class="img-thumbnail mb-1"> <!-- из за этого классе изображение становится миниатюрным и в рамке -->
+        <p>Когда становишься на путь программирования хочется какие либо фильмы на эту тематику.
+    Представляем вам подборку из 10 фильмов для программистов
+        </p>
+            <a href="https://habr.com/ru/companies/ruvds/articles/523374/" target="_blank"> <!-- Ссылка на сайт  --> 
+    <button class="btn btn-warning">Посмотреть</button> <!-- кнопка к которой прикрепленна ссылка -->
+            </a>
+    {% endblock aside_news_section %}
+    

@@ -1,0 +1,27 @@
+{% extends 'app/main.html' %}
+{% load crispy_forms_tags %}
+{% block main_section %}
+    <div class="form_section">  <!-- Мы это добавили что бы просто потом добавить свои собственные стили --> 
+        <h2>Авторизация</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}  <!-- форма которая подтягивается из модуля authViews.LoginView -->
+            <button type="submit" class="btn btn-outline-warning">Войти</button> <!-- submit - значит будет загружаться с перезагрузкой страницы  --> 
+        </form>
+        <hr>
+        Забыли пароль? <a href="{% url 'pass-reset' %}">Получить новый</a>
+    </div>
+{% endblock main_section %}
+
+{% block aside_news_section %}
+<h3><b>5 Лучших игровых движков</b></h3>
+<img src="https://static.mvideo.ru/media/Promotions/Promo_Page/2021/September/obzor-populyarnyh-igrovyh-dvizhkov/obzor-populyarnyh-igrovyh-dvizhkov-top1-m.png" class="img-thumbnail mb-1"> <!-- из за этого классе изображение становится миниатюрным и в рамке -->
+    <p>С развитием сферы игростроения появилось огромное множество всевозможных движков. Выбрать подходящий
+        бывает очень не просто. Мы расскажем вам про 5 лучших игровых движков для создания игр всех тематик 
+    </p>
+        <a href="https://habr.com/ru/companies/timeweb/articles/659891/" target="_blank"> <!--  --> 
+<button class="btn btn-warning">Посмотреть</button> <!--  -->
+        </a>
+{% endblock aside_news_section %}
+
+<!--  -->
